@@ -1,11 +1,17 @@
+
+-- Full data table CovidDeaths ordered by Country and Date
+
 SELECT *
 FROM PortfolioProject..CovidDeaths
 ORDER BY 3,4;
 
+--Full data table CovidVaccinations ordered by Country and Date
 
---SELECT *
---FROM PortfolioProject..CovidVaccinations
---ORDER BY 3,4
+SELECT *
+FROM PortfolioProject..CovidVaccinations
+ORDER BY 3,4
+
+--Simplified CovidDeaths table with key information for further insight, ordered by Country and Date
 
 SELECT Location, date, total_cases, new_cases, total_deaths, population
 FROM PortfolioProject..CovidDeaths
@@ -62,8 +68,7 @@ WHERE continent IS NOT NULL
 GROUP BY date
 ORDER BY 1,2;
 
--- Total pop vaccinated
-
+-- Total population vaccinated
 
 SELECT dea. continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 FROM PortfolioProject..CovidDeaths dea
@@ -74,7 +79,7 @@ WHERE dea.continent IS NOT NULL
 ORDER BY 2,3;
 
 
--- Rolling vac Count
+-- Rolling Vaccination Count
 
 SELECT dea. continent, dea.location, dea.date, dea.population, vac.new_vaccinations, 
 SUM(CAST (vac.new_vaccinations AS INT)) OVER (PARTITION BY dea.location ORDER BY dea.location, dea.date) AS rolling_vac_count 
@@ -88,6 +93,7 @@ ORDER BY 2,3;
 
 
 -- USE CTE
+-- Allows both a Rolling Vaccination Count with a Rolling percentage vaccinated
 
 WITH popvsvac (continent, location, date, population, new_vaccinations, rolling_vac_count) 
 AS
@@ -106,6 +112,7 @@ FROM popvsvac
 
 -- TEMP TABLE
 -- if the table needs to be run again with new select function remove table with following code (DROP TABLE IF exists #percentpopulationvaccinated)
+--Allows both a Rolling Vaccination Count with a Rolling percentage vaccinated
 
 CREATE TABLE #percentpopulationvaccinated
 (
