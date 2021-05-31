@@ -60,6 +60,18 @@ WHERE continent IS NOT NULL
 GROUP BY continent
 ORDER BY total_death_count DESC
 
+--Percentage of serious cases
+--Data might reflect differences in treatment and the nature of what is defined as an ICU may very as well as capacity
+
+
+SELECT location, Sum(cast(hosp_patients AS Numeric)) AS hosp_patients, sum(cast(icu_patients AS Numeric)) AS icu_patients,
+sum(cast(icu_patients AS Numeric))/Sum(cast(hosp_patients AS Numeric))*100 AS serious_percentage
+FROM PortfolioProject..CovidDeaths
+WHERE icu_patients is not null
+Group by location
+ORDER BY serious_percentage DESC
+
+
 --New cases and deaths per day 
 
 SELECT date, sum(new_cases) AS total_cases, sum(cast(new_deaths AS int)) AS total_deaths, sum(cast(new_deaths AS int))/sum(new_cases) AS death_percentage
@@ -77,7 +89,6 @@ ON dea.location = vac.location
 AND dea.date = vac.date
 WHERE dea.continent IS NOT NULL
 ORDER BY 2,3;
-
 
 -- Rolling Vaccination Count
 
